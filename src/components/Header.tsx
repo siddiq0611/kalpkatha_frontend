@@ -5,8 +5,8 @@ const Header: React.FC = () => {
     <header className="bg-dark-200 py-4 border-b border-dark-300">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <Link href="/" className="flex items-center space-x-2">
-          <img src="/logo.svg" alt="Story Generator" className="h-8 w-8" />
-          <span className="text-xl font-bold text-white">kalpkatha</span>
+          <img src="/logo.png" alt="Story Generator" className="h-10 w-10 rounded-lg" />
+          <span className="text-2xl font-bold text-white">kalpkatha</span>
         </Link>
         <nav>
             <a 
@@ -15,7 +15,7 @@ const Header: React.FC = () => {
                 rel="noopener noreferrer"
                 className="flex items-center"
                 >
-            <div className="w-12 h-12 bg-white rounded-full p-0.5 transition-transform duration-300 hover:scale-110 hover:shadow-lg hover:bg-gray-100">
+            <div className="w-12 h-12 bg-graynew rounded-full p-0.5 transition-transform duration-300 hover:scale-110 hover:shadow-lg hover:bg-white">
                 <img 
                 src="/avatar.svg" 
                 alt="GitHub Avatar" 
