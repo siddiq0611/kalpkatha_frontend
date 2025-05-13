@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { StoryRequest, StoryResponse, FormState } from '../types';
+import { StoryResponse, FormState } from '../types';
 import LoadingSpinner from './LoadingSpinner';
 
 const StoryForm: React.FC = () => {
