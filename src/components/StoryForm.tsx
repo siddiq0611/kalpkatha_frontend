@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { StoryResponse, FormState } from '../types';
 import LoadingSpinner from './LoadingSpinner';
-import ChapterRenderer from './ChapterRenderer';
-
+import ReactMarkdown from 'react-markdown';
 
 const StoryForm: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -32,7 +31,7 @@ const StoryForm: React.FC = () => {
 
       setSessionId(response.data.session_id);
       setFormState({ isLoading: false, error: null, story: response.data.chapters.join('\n\n') });
-    } catch {
+    } catch (error) {
       setFormState({ isLoading: false, error: 'Failed to generate story.', story: null });
     }
   };
@@ -105,8 +104,9 @@ const StoryForm: React.FC = () => {
       {formState.story && (
         <div>
           <h2 className="text-2xl">Your Story</h2>
-          <ChapterRenderer chapterText={formState.story} />
-          
+          <div className="prose prose-lg max-w-none dark:prose-invert">
+            <ReactMarkdown>{formState.story}</ReactMarkdown>
+          </div>
           <button className="btn btn-primary mt-4" onClick={handleContinue} disabled={formState.isLoading}>
             Continue Story
           </button>
