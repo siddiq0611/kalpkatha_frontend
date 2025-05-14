@@ -6,13 +6,13 @@ import rehypeRaw from 'rehype-raw';
 import 'github-markdown-css';
 
 function ChapterRenderer({ chapterText }: { chapterText: string }) {
-  const cleanText = chapterText
-    // Join split bolds across lines: "**1. **\nEli**" → "**1. Eli**"
-    .replace(/\*\*\s*\n\s*(.*?)\*\*/g, '**$1**')
-    // Ensure bold lines have spacing around them
-    .replace(/(?<!\n)\*\*(.*?)\*\*(?!\n)/g, '\n\n**$1**\n\n')
-    // Add extra spacing between chapters (if marked with e.g. "Chapter N")
-    .replace(/(Chapter\s+\d+[:：].*)/gi, '\n\n## $1\n\n');
+//   const cleanText = chapterText
+//     // Join split bolds across lines: "**1. **\nEli**" → "**1. Eli**"
+//     .replace(/\*\*\s*\n\s*(.*?)\*\*/g, '**$1**')
+//     // Ensure bold lines have spacing around them
+//     .replace(/(?<!\n)\*\*(.*?)\*\*(?!\n)/g, '\n\n**$1**\n\n')
+//     // Add extra spacing between chapters (if marked with e.g. "Chapter N")
+//     .replace(/(Chapter\s+\d+[:：].*)/gi, '\n\n## $1\n\n');
 
   return (
     <div className="bg-dark-200 px-4 py-2 prose dark:prose-invert max-w-none">
@@ -29,7 +29,7 @@ function ChapterRenderer({ chapterText }: { chapterText: string }) {
           p: ({ children }) => <p className="text-base leading-relaxed">{children}</p>,
         }}
       />
-      {cleanText}
+      {chapterText}
     </div>
   );
 }
