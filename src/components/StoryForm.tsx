@@ -31,7 +31,7 @@ const StoryForm: React.FC = () => {
 
       setSessionId(response.data.session_id);
       setFormState({ isLoading: false, error: null, story: response.data.chapters.join('\n\n') });
-    } catch (error) {
+    } catch {
       setFormState({ isLoading: false, error: 'Failed to generate story.', story: null });
     }
   };
