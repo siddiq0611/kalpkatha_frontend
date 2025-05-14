@@ -4,6 +4,37 @@ import { StoryResponse, FormState } from '../types';
 import LoadingSpinner from './LoadingSpinner';
 import ReactMarkdown from 'react-markdown';
 
+const chapterLimits: Record<number, number> = {
+  1: 2000,
+  2: 1250,
+  3: 850,
+  4: 625,
+  5: 500,
+  6: 400,
+  7: 350,
+  8: 300,
+  9: 250,
+  10: 200,
+};
+
+function getChapterLimit(chapter: number): number {
+  return chapterLimits[chapter] || 200;
+}
+
+function generateChapterLengthOptions(chapter: number): React.ReactElement[] {
+  const max = getChapterLimit(chapter);
+  const options = [];
+  for (let i = 50; i <= max; i += 50) {
+    options.push(
+      <option key={i} value={i}>
+        {i}
+      </option>
+    );
+  }
+  return options;
+}
+
+
 const StoryForm: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [chaptersCount, setChaptersCount] = useState<number>(3);
@@ -57,41 +88,58 @@ const StoryForm: React.FC = () => {
     }
   };
 
+
+
+
+
   return (
     <div className="w-full max-w-4xl mx-auto">
       <form onSubmit={handleSubmit} className="mb-8 space-y-4">
         <textarea
           value={prompt}
           onChange={e => setPrompt(e.target.value)}
-          placeholder="Once upon a time..."
+          placeholder="Once upon a time, there was a girl named Miku who loved cars...."
           className="input-field h-32"
           disabled={formState.isLoading}
         />
 
-        <div className="flex space-x-4">
-          <label className="w-1/2">
-            Chapters:
-            <input
-              type="number"
-              min={1}
-              value={chaptersCount}
-              onChange={e => setChaptersCount(+e.target.value)}
-              className="ml-2 input-field w-full"
-            />
-          </label>
+<div className="flex space-x-4">
+  <label className="w-1/2">
+    Chapter (1–10):
+    <select
+      value={chaptersCount}
+      onChange={e => {
+        const chapter = +e.target.value;
+        setChaptersCount(chapter);
 
-          <label className="w-1/2">
-            Words per chapter:
-            <input
-              type="number"
-              min={50}
-              value={chapterLength}
-              onChange={e => setChapterLength(+e.target.value)}
-              className="ml-2 input-field w-full"
-            />
-          </label>
+        // Auto-adjust chapterLength if current exceeds max for selected chapter
+        const max = getChapterLimit(chapter);
+        if (chapterLength > max) setChapterLength(max);
+      }}
+      className="ml-2 input-field w-full"
+      disabled={formState.isLoading}
+    >
+      {[...Array(10)].map((_, i) => (
+        <option key={i + 1} value={i + 1}>
+          {i + 1}
+        </option>
+      ))}
+    </select>
+  </label>
 
-        </div>
+  <label className="w-1/2">
+    Words per chapter:
+    <select
+      value={chapterLength}
+      onChange={e => setChapterLength(+e.target.value)}
+      className="ml-2 input-field w-full"
+      disabled={formState.isLoading}
+    >
+      {generateChapterLengthOptions(chaptersCount)}
+    </select>
+  </label>
+</div>
+
 
         <button type="submit" className="btn btn-primary" disabled={formState.isLoading}>
           {formState.isLoading ? 'Generating...' : 'Generate Story'}
