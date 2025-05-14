@@ -12,7 +12,7 @@ function ChapterRenderer({ chapterText }: { chapterText: string }) {
     // Ensure bold lines have spacing around them
     .replace(/(?<!\n)\*\*(.*?)\*\*(?!\n)/g, '\n\n**$1**\n\n')
     // Add extra spacing between chapters (if marked with e.g. "Chapter N")
-    .replace(/(?:\n)*Chapter\s+(\d+[:：].*)/gi, '\n\n---\n\n## Chapter $1\n\n');
+    .replace(/(Chapter\s+\d+[:：].*)/gi, '\n\n## $1\n\n');
 
   return (
     <div className="bg-dark-200 px-4 py-2 prose dark:prose-invert max-w-none">
