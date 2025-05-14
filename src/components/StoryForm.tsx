@@ -107,7 +107,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { StoryResponse, FormState } from '../types';
 import LoadingSpinner from './LoadingSpinner';
-import ReactMarkdown from 'react-markdown';
 import ChapterRenderer from './ChapterRenderer';
 
 
@@ -163,13 +162,6 @@ const StoryForm: React.FC = () => {
       setFormState({ isLoading: false, error: 'Failed to continue story.', story: formState.story });
     }
   };
-
-  const formatMarkdown = (raw: string) => {
-    return raw
-      .replace(/\*\*\s*\n\s*(.*?)\*\*/g, '**$1**') // Join separated bold markers
-      .replace(/(?<!\n)\*\*(.*?)\*\*(?!\n)/g, '\n\n**$1**\n\n'); // Add newlines around bold
-  };
-
 
   return (
     <div className="w-full max-w-4xl mx-auto">

@@ -17,17 +17,16 @@ function ChapterRenderer({ chapterText }: { chapterText: string }) {
   return (
     <div className="bg-dark-200 px-4 py-2 prose dark:prose-invert max-w-none">
       <ReactMarkdown
-        children={cleanText}
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          strong: ({ node, children }) => (
+          strong: ({ children }) => (
             <strong className="text-lg font-semibold">{children}</strong>
           ),
-          h2: ({ node, children }) => (
+          h2: ({ children }) => (
             <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>
           ),
-          p: ({ node, children }) => <p className="text-base leading-relaxed">{children}</p>,
+          p: ({ children }) => <p className="text-base leading-relaxed">{children}</p>,
         }}
       />
     </div>
