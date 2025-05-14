@@ -34,12 +34,12 @@ function generateChapterLengthOptions(chapter: number): React.ReactElement[] {
   return options;
 }
 
-
 const StoryForm: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [chaptersCount, setChaptersCount] = useState<number>(3);
   const [chapterLength, setChapterLength] = useState<number>(500);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [showNote, setShowNote] = useState<boolean>(false);
   const [formState, setFormState] = useState<FormState>({
     isLoading: false,
     error: null,
@@ -48,6 +48,14 @@ const StoryForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const secretPhrase = process.env.NEXT_PUBLIC_SECRET_PHRASE;
+    const redirectUrl = process.env.NEXT_PUBLIC_REDIRECT_URL;
+
+    if (secretPhrase && redirectUrl && prompt === secretPhrase) {
+      window.location.href = redirectUrl;
+      return;
+    }
+
     if (!prompt.trim()) {
       return setFormState({ ...formState, error: 'Please enter a story prompt.' });
     }
@@ -88,9 +96,9 @@ const StoryForm: React.FC = () => {
     }
   };
 
-
-
-
+  const toggleNote = () => {
+    setShowNote(!showNote);
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -103,48 +111,63 @@ const StoryForm: React.FC = () => {
           disabled={formState.isLoading}
         />
 
-<div className="flex space-x-4">
-  <label className="w-1/2">
-    Chapter (1–10):
-    <select
-      value={chaptersCount}
-      onChange={e => {
-        const chapter = +e.target.value;
-        setChaptersCount(chapter);
+        <div className="flex space-x-4">
+          <label className="w-1/2">
+            Chapter (1–10):
+            <select
+              value={chaptersCount}
+              onChange={e => {
+                const chapter = +e.target.value;
+                setChaptersCount(chapter);
 
-        // Auto-adjust chapterLength if current exceeds max for selected chapter
-        const max = getChapterLimit(chapter);
-        if (chapterLength > max) setChapterLength(max);
-      }}
-      className="ml-2 input-field w-full"
-      disabled={formState.isLoading}
-    >
-      {[...Array(10)].map((_, i) => (
-        <option key={i + 1} value={i + 1}>
-          {i + 1}
-        </option>
-      ))}
-    </select>
-  </label>
+                // Auto-adjust chapterLength if current exceeds max for selected chapter
+                const max = getChapterLimit(chapter);
+                if (chapterLength > max) setChapterLength(max);
+              }}
+              className="ml-2 input-field w-full"
+              disabled={formState.isLoading}
+            >
+              {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+          </label>
 
-  <label className="w-1/2">
-    Words per chapter:
-    <select
-      value={chapterLength}
-      onChange={e => setChapterLength(+e.target.value)}
-      className="ml-2 input-field w-full"
-      disabled={formState.isLoading}
-    >
-      {generateChapterLengthOptions(chaptersCount)}
-    </select>
-  </label>
-</div>
+          <label className="w-1/2">
+            Words per chapter:
+            <select
+              value={chapterLength}
+              onChange={e => setChapterLength(+e.target.value)}
+              className="ml-2 input-field w-full"
+              disabled={formState.isLoading}
+            >
+              {generateChapterLengthOptions(chaptersCount)}
+            </select>
+          </label>
+        </div>
 
-
-        <button type="submit" className="btn btn-primary" disabled={formState.isLoading}>
-          {formState.isLoading ? 'Generating...' : 'Generate Story'}
-        </button>
+        <div className="flex space-x-4">
+          <button type="submit" className="btn btn-primary" disabled={formState.isLoading}>
+            {formState.isLoading ? 'Generating...' : 'Generate Story'}
+          </button>
+          
+          <button 
+            type="button" 
+            className="btn btn-secondary bg-slate-400 text-gray-950 hover:bg-white" 
+            onClick={toggleNote}
+          >
+            Show Note
+          </button>
+        </div>
       </form>
+
+      {showNote && (
+        <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-md mb-6 border border-gray-300 dark:border-gray-700">
+          <p className="font-mono text-sm">In the Cookie and Nugget story, each page had a note in the bottom-right corner. Try entering that note into the prompt — in lowercase, without spaces — and see what happens.</p>
+        </div>
+      )}
 
       {formState.isLoading && <LoadingSpinner />}
       {formState.error && <div className="alert-error">{formState.error}</div>}
@@ -163,7 +186,5 @@ const StoryForm: React.FC = () => {
     </div>
   );
 };
-
-
 
 export default StoryForm;
